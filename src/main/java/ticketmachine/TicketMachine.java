@@ -1,12 +1,12 @@
 package ticketmachine;
 
 /**
- * TicketMachine models a naive ticket machine that issues flat-fare tickets. The price of a ticket is specified via the
- * constructor. It is a naive machine in the sense that it trusts its users to insert enough money before trying to print a
- * ticket. It also assumes that users enter sensible amounts.
+ * TicketMachine models a ticket machine that issues flat-fare tickets.
+ * The price of a ticket is specified via the constructor.
+ * (Description originale par David J. Barnes and Michael Kolling)
  *
  * @author David J. Barnes and Michael Kolling
- * @version 2006.03.30
+ * @version 2006.03.30 (Modifié 2025)
  */
 public class TicketMachine {
 	// The price of a ticket from this machine.
@@ -22,7 +22,7 @@ public class TicketMachine {
 	 * @param ticketCost the price of a ticket, >=0
 	 */
 	public TicketMachine(int ticketCost) {
-		// Test de validité du paramètre
+		// Test de validité du paramètre (S10)
 		if (ticketCost <= 0) {
 			throw new IllegalArgumentException("Ticket price must be positive");
 		}
@@ -63,6 +63,9 @@ public class TicketMachine {
 	 * @throws IllegalArgumentException if amount is not positive
 	 */
 	public void insertMoney(int amount) {
+		if (amount <= 0) {
+			throw new IllegalArgumentException("Amount must be positive");
+		}
 		balance = balance + amount;
 	}
 
@@ -73,22 +76,34 @@ public class TicketMachine {
 	 */
 	public int refund() {
 		System.out.println("Je vous rends : " + balance + " centimes");
-		return balance;
+		int amountToRefund = balance;
+		balance = 0;
+		return amountToRefund;
 	}
 
 	/**
-	 * Print a ticket. Update the total collected and reduce the balance 
+	 * Print a ticket. Update the total collected and reduce the balance
 	 *
 	 * @return vrai si le ticket a été imprimé, faux sinon
 	 */
 	public boolean printTicket() {
-		// Simulate the printing of a ticket.
-		System.out.println("##################");
-		System.out.println("# The BlueJ Line");
-		System.out.println("# Ticket");
-		System.out.println("# " + price + " cents.");
-		System.out.println("##################");
-		System.out.println();
-		return true;
+		if (balance >= price) {
+			// Simulate the printing of a ticket.
+			System.out.println("##################");
+			System.out.println("# The BlueJ Line");
+			System.out.println("# Ticket");
+			System.out.println("# " + price + " cents.");
+			System.out.println("##################");
+			System.out.println();
+
+			balance = balance - price;
+			total = total + price;
+
+			return true;
+		} else {
+			// CORRECTION (S3) : Montant insuffisant
+			System.out.println("Montant insuffisant. Veuillez insérer au moins " + price + " centimes.");
+			return false;
+		}
 	}
 }
